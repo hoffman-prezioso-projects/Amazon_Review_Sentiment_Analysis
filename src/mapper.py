@@ -26,7 +26,10 @@ review = {}
 for line in sys.stdin:
   
   line = line.strip()
-  key, value = line.split(': ', 1)
+  try: 
+    key, value = line.split(': ', 1)
+  except ValueError:
+    continue
 
   review[key] = value
 
