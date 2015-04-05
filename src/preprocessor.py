@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import time
 
 print "This program splits the Amazon reviews file into individual .review files."
@@ -9,6 +11,7 @@ try:
 	master_file = open(master_file_path)
 except:
 	print "Invalid file:", master_file_path
+	exit(0)
 
 
 record_counter = 0
