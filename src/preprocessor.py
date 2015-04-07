@@ -15,18 +15,22 @@ except:
 
 
 record_counter = 0
+reviews_per_file = 10000
 record_file_directory = "./reviews/"
-current_record_file = open(record_file_directory + str(record_counter).zfill(5) + ".review", 'w')
+current_record_file = open(record_file_directory + str(record_counter).zfill(8) + ".review", 'w')
 current_record_contents = ""
 
 for line in master_file:
 	if not line.isspace():
 		current_record_contents += line
 	else:
-		current_record_file.write(current_record_contents)
-		current_record_file.close()
 		record_counter += 1
-		current_record_file = open(record_file_directory + str(record_counter).zfill(5) + ".review", 'w')
-		current_record_contents = ""
+		if record_counter % reviews_per_file == 0:
+			current_record_file.write(current_record_contents)
+			current_record_file.close()
+			current_record_file = open(record_file_directory + str(record_counter / reviews_per_file).zfill(8) + ".review", 'w')
+			current_record_contents = ""
+		else:
+			current_record_contents += line
 
 print "Finished in: %s seconds" % (time.time() - start_time)
