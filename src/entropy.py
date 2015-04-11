@@ -1,7 +1,9 @@
+#!/usr/bin/env python
 
+from decimal import *
 from math import log
 
-def entropy(values, b=0):
+def calculate(values, b=0):
     '''Return the normalized Shannon entropy of values'''
 
     if b == 0:
@@ -12,8 +14,8 @@ def entropy(values, b=0):
     
     for x in values:
         if x > 0:
-            ratio = float(x) / total
+            ratio = x / total
             entropy -= ratio * log(ratio, b)
 
-    return entropy
+    return float(entropy)
 

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from decimal import *
 import re
 import sys
 

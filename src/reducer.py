@@ -4,13 +4,14 @@ from decimal import *
 import math
 import sys
 
-import entropy
+#import entropy
 
 def emit(word, occurrences):
-    total_occurrences = sum(occurrences)
-    total_rating = sum([a*b for a,b in zip(occurrences, range(1,6))])
-    average = float(total_rating) / total_occurrences
-    print '%s\t%s\t%s\t%s' % (word, average, total_occurrences, entropy.entropy(occurrences))
+    #total_occurrences = sum(occurrences)
+    #total_rating = sum([a*b for a,b in zip(occurrences, range(1,6))])
+    #average = float(total_rating) / total_occurrences
+    #print '%s\t%s\t%s\t%s' % (word, average, total_occurrences, entropy.entropy(occurrences))
+    print '%s\t%s' % (word, '\t'.join(str(x) for x in occurrences))
 
 current_word = None
 
