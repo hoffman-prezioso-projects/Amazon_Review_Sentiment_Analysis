@@ -37,5 +37,3 @@ for line in sys.stdin:
 
 emit(word, occurrence_count)
 
-for i in range(len(reviews)):
-    print >> sys.stderr, reviews
