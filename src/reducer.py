@@ -14,11 +14,15 @@ def emit(word, occurrences):
 
 current_word = None
 
+reviews = [0] * 5
+
 for line in sys.stdin:
-    word, rating, occurences = line.strip().split('\t', 2)
+    word, rating, occurrences = line.strip().split('\t', 2)
     rating = int(float(rating))
-    occurences = int(occurences)
+    occurrences = int(occurrences)
     
+    reviews[rating - 1] += occurrences
+
     if word != current_word:
         if current_word:
             emit(current_word, occurrence_count)
@@ -27,7 +31,10 @@ for line in sys.stdin:
         occurrence_count = [0] * 5
         doc_count = [0] * 5
     
-    occurrence_count[rating - 1] += occurences
+    occurrence_count[rating - 1] += occurrences
     doc_count[rating - 1] += 1  
 
 emit(word, occurrence_count)
+
+for i in range(len(reviews)):
+    print >> sys.stderr, reviews

@@ -26,10 +26,8 @@ def get_word_freq(text):
 def emit(words, review, source):
     word_freq, max_term_freq, num_words = get_word_freq(words)
     for word in word_freq:
-        # emit word, rating, tf
         count = word_freq[word]
         print '%s\t%s\t%s' % (word, review['review/score'], count)
-        #        count, Decimal(count) / Decimal(num_words), source)
 
 
 review = {}
