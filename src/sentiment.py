@@ -32,14 +32,12 @@ def get_sentiment(string, db_name = 'sentiment.db'):
         result = cursor.fetchone()
         if result:
             ratings.append((result[0] - 3) * 2.5)
-            print word, result[1]
             idfs.append(math.log(1.0 / result[1], 2) + 1)
             entropies.append(result[2])
             importances.append(result[1] / (0.1 + 0.9 * result[2]))
             #idfs.append(math.log(1.0 / result[1]) + 1)
 
     if len(ratings):
-        print words, ratings, idfs, entropies
         dot_product = sum([r*i*(1-e) for r,i,e in zip(ratings, idfs, entropies)])
         rating = dot_product / sum(idfs)
         return rating;
@@ -51,10 +49,19 @@ def main(db_name = 'sentiment.db'):
     
     sentiment = 0
 
+    value = ''
+
     # add sentiment for each line
     for line in sys.stdin:
+        line = line.strip()
+        value += line + ' '
         sentiment += get_sentiment(line, db_name)
-    print 'sentiment: %s' % (sentiment)
+    
+    if len(value) > 30:
+        value = value[:30] + '...'
+    else:
+        value = value[:-1]
+    print 'sentiment(%s): %s' % (value, sentiment)
 
 
 if __name__ == '__main__':
