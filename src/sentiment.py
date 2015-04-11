@@ -5,14 +5,14 @@ import sqlite3
 import sys
 
 query = '''
-select rating, occurrences * 1.0 / total.sum
+select rating, occurrences * 1.0 / total.max as df, entropy
 from data
-, (select sum(occurrences) as sum
+, (select max(occurrences) as max
 	from data) as total
 where word='%s';
 '''
 
-def get_sentiment(string, db_name):
+def get_sentiment(string, db_name = 'sentiment.db'):
     '''Get the sentiment for a string from the db.
     The string may have multiple words'''
     
@@ -24,18 +24,25 @@ def get_sentiment(string, db_name):
     count = 0
     idfs = []
     ratings = []
+    entropies = []
+    importances = []
+    
     for word in words:
         cursor = connection.execute(query % word)
         result = cursor.fetchone()
         if result:
-            ratings.append(result[0])
-            idfs.append(math.log(1.0 / result[1]) + 1)
+            ratings.append((result[0] - 3) * 2.5)
+            print word, result[1]
+            idfs.append(math.log(1.0 / result[1], 2) + 1)
+            entropies.append(result[2])
+            importances.append(result[1] / (0.1 + 0.9 * result[2]))
+            #idfs.append(math.log(1.0 / result[1]) + 1)
 
     if len(ratings):
-        dot_product = sum([a*b for a,b in zip(ratings, idfs)])
+        print words, ratings, idfs, entropies
+        dot_product = sum([r*i*(1-e) for r,i,e in zip(ratings, idfs, entropies)])
         rating = dot_product / sum(idfs)
-        return (rating - 3) * 2.5;
-        #return rating * 2 - 5.0
+        return rating;
     else:
         return 0
 

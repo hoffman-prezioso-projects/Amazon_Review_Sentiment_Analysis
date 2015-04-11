@@ -42,12 +42,12 @@ for line in sys.stdin:
     except ValueError:
         continue
 
-    review[key] = value
-
     if key == 'product/productId':
         review = {}
 
-    elif key == 'review/summary':
+    review[key] = value
+
+    if key == 'review/summary':
         words = re.sub(nonword_pattern, ' ', value)
         emit(words, review, 'summary')
 

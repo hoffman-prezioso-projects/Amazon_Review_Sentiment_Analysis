@@ -15,7 +15,7 @@ except:
 
 
 record_counter = 0
-reviews_per_file = 10000
+reviews_per_file = 100000
 record_file_directory = "./reviews/"
 current_record_file = open(record_file_directory + str(record_counter).zfill(8) + ".review", 'w')
 current_record_contents = ""
