@@ -10,7 +10,7 @@ class SpellChecker:
 
 	def check(self, word):
 		try:
-			self.dictionary[word] # throws KeyError if word is not found
+			self.dictionary[word.lower()] # throws KeyError if word is not found
 
 			# word in dictionary
 			return True
