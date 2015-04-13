@@ -27,18 +27,19 @@ from data
 where word='%s';
 '''
 
-def get_sentiment(string, db_name = 'sentiment.db'):
+
+def get_sentiment(string, db_name='sentiment.db'):
     '''Get the sentiment for a string from the db.
     The string may have multiple words'''
-    
+
     sentiment = 0
-    
+
     words = string.strip().split()
     connection = sqlite3.connect(db_name)
-    
+
     cursor = connection.execute(sum_query)
     totals = cursor.fetchone()
-    
+
     cursor = connection.execute(sum_query)
     max_occurrences = cursor.fetchone()[0]
 
@@ -47,34 +48,37 @@ def get_sentiment(string, db_name = 'sentiment.db'):
     ratings = []
     entropies = []
     importances = []
-    
+
     for word in words:
         cursor = connection.execute(query % word)
         result = cursor.fetchone()
         if result:
             occurrences = sum(result)
-            average = sum([a*b for a,b in zip(result, range(1, 6))]) / occurrences
+            average = sum(
+                [a*b for a, b in zip(result, range(1, 6))]) / occurrences
             ratios = [float(a)/b for a, b in zip(result, totals)]
 
-            #print 'result', result
-            #print 'ratios', ratios
-            #print 'totals', totals
-            
+            # print 'result', result
+            # print 'ratios', ratios
+            # print 'totals', totals
+
             ratings.append((average - 3) * 2.5)
             idfs.append(math.log(max_occurrences / sum(result)) + 1)
             entropies.append(entropy.calculate(ratios))
 
     if len(ratings):
         print idfs
-        dot_product = sum([r*i*(1-e) for r,i,e in zip(ratings, idfs, entropies)])
+        dot_product = sum(
+            [r*i*(1-e) for r, i, e in zip(ratings, idfs, entropies)])
         rating = dot_product / sum(idfs)
-        return rating;
+        return rating
     else:
         return 0
 
-def main(db_name = 'sentiment.db'):
+
+def main(db_name='sentiment.db'):
     '''Compute sentiment based on whatever was piped in'''
-    
+
     sentiment = 0
 
     # add sentiment for each line
@@ -84,4 +88,4 @@ def main(db_name = 'sentiment.db'):
 
 
 if __name__ == '__main__':
-    main();
+    main()

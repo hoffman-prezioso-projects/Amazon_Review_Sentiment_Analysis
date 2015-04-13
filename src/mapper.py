@@ -6,8 +6,9 @@ import sys
 splitter = re.compile('\s+')
 nonword_pattern = re.compile(r'[^a-zA-Z]')
 
+
 def get_word_freq(text):
-    word_freq = {};
+    word_freq = {}
     max_term_freq = 0
     words = splitter.split(text)
     for word in words:
@@ -32,9 +33,9 @@ def emit(words, review, source):
 review = {}
 
 for line in sys.stdin:
-    
+
     line = line.strip()
-    try: 
+    try:
         key, value = line.split(': ', 1)
     except ValueError:
         continue
@@ -51,6 +52,3 @@ for line in sys.stdin:
     '''elif key == 'review/text':
         words = re.sub(nonword_pattern, ' ', value)
         emit(words, review, 'text')'''
-        
-
-
