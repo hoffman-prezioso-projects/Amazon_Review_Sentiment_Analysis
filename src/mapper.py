@@ -2,24 +2,30 @@
 
 import re
 import sys
+from spell_checker import SpellChecker
 
-splitter = re.compile('\s+')
 nonword_pattern = re.compile(r'[^a-zA-Z]')
+sc = SpellChecker()
 
 
 def get_word_freq(text):
     word_freq = {}
-    max_term_freq = 0
-    words = splitter.split(text)
+    words = text.split()
+
     for word in words:
         word = word.lower()
-        if word != '':
+        if (sc.check(word)):
             if word in word_freq:
                 word_freq[word] += 1
             else:
                 word_freq[word] = 1
-            if word_freq[word] > max_term_freq:
-                max_term_freq = word_freq[word]
+
+    max_term_freq = 0
+
+    for word in word_freq:
+        if word_freq[word] > max_term_freq:
+            max_term_freq = word_freq[word]
+
     return word_freq, max_term_freq
 
 review = {}
@@ -36,6 +42,7 @@ for line in sys.stdin:
 
     if key == 'review/text':
         words = re.sub(nonword_pattern, ' ', value)
+
         word_freq, max_term_freq = get_word_freq(words)
 
         for word in word_freq:

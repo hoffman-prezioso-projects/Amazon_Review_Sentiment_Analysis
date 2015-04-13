@@ -3,7 +3,7 @@ class SpellChecker:
 
     def __init__(self):
         self.dictionary = {}
-        word_list = open("../res/en_dictionary.txt")
+        word_list = open("./res/en_dictionary.txt")
 
         for word in word_list:
             self.dictionary[word.strip()] = True
