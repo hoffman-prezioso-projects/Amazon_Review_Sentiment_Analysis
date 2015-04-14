@@ -5,17 +5,27 @@ import sys
 
 
 def emit(word, occurrence_counts):
-    print '%s\t%s' % (word, '\t'.join(str(x) for x in occurrence_counts))
+    '''
+    Outputs word and occurence counts for each rating, tab delimited.
+    Sample format "dog    10    123    222    435    736"
+    '''
+
+    count_output = []
+
+    for rating_count in occurrence_counts:
+        count_output.append(str(rating_count))
+
+    count_output = '\t'.join(count_output)
+
+    print '%s\t%s' % (word, count_output)
+
 
 current_word = None
-review_total_counts = [0] * 5
 
 for line in sys.stdin:
     word, rating, occurrences = line.strip().split('\t', 2)
     rating = int(rating)
     occurrences = int(occurrences)
-
-    review_total_counts[rating - 1] += occurrences
 
     if word != current_word:
         if current_word:
