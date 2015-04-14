@@ -16,9 +16,8 @@ echo "Copy complete!"
 
 echo "Running mapReduce..."
 hadoop jar /usr/lib/hadoop-0.20-mapreduce/contrib/streaming/hadoop-streaming.jar \
--file src/mapper.py \
+-files src \
 -mapper src/mapper.py \
--file src/reducer.py \
 -reducer src/reducer.py \
 -input crawl/reviews/* \
 -output crawl/$OUTPUT_DIR
