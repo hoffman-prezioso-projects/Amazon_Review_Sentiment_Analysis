@@ -4,7 +4,7 @@ import re
 import sys
 from spell_checker import SpellChecker
 
-nonword_pattern = re.compile(r'[^a-zA-Z]')
+nonword_pattern = re.compile(r"[^a-zA-Z']")
 sc = SpellChecker()
 
 
