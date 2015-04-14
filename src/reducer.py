@@ -24,7 +24,7 @@ current_word = None
 
 for line in sys.stdin:
     word, rating, occurrences = line.strip().split('\t', 2)
-    rating = int(rating)
+    rating = int(float(rating))
     occurrences = int(occurrences)
 
     if word != current_word:
