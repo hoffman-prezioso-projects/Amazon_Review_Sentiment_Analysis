@@ -74,6 +74,11 @@ def basic_sum(rating_totals):
 	return sentiment
 
 
+def normalize_totals(rating_totals):
+	max_total = max(rating_totals)
+	normalized_totals = [float(total) / max_total for total in rating_totals]
+	return normalized_totals
+
 def algorithm(rating_totals):
 	"""Placeholder for better algorithm calculation"""
 
@@ -88,13 +93,16 @@ def print_calculation_info(rows):
 		word = word_row[0]
 		rating_totals = word_row[1:]
 
-		word_sentiment = algorithm(rating_totals)
+		basic_sum_value = basic_sum(rating_totals)
 		entropy_value = entropy(rating_totals)
-
+		normalized_totals = normalize_totals(rating_totals)
+		normalized_sum = basic_sum(normalized_totals)
 		print "\n"
 		print "Word: ", word
 		print "Rating Totals: ", rating_totals
-		print "Sentiment: ", word_sentiment
+		print "Normalized Totals: ", normalized_totals
+		print "Basic Sum: ", basic_sum_value
+		print "Normalized Basic Sum: ", normalized_sum
 		print "Entropy:", entropy_value
 		print "\n"
 
