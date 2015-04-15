@@ -54,10 +54,9 @@ def get_sentiment(string, db_name='sentiment.db'):
         result = cursor.fetchone()
         if result:
             occurrences = sum(result)
-            average = sum(
-                [a*b for a, b in zip(result, range(1, 6))]) / occurrences
-            ratios = [float(a)/b for a, b in zip(result, totals)]
-
+            average = sum([a*b for a, b in zip(result, range(1, 6))]) / occurrences
+            ratios = [(float(a)/b)**2 for a, b in zip(result, totals)]
+            # print 'ratios', ratios
             # print 'result', result
             # print 'ratios', ratios
             # print 'totals', totals
@@ -67,10 +66,10 @@ def get_sentiment(string, db_name='sentiment.db'):
             entropies.append(entropy.calculate(ratios))
 
     if len(ratings):
-        print idfs
+        #print 'entropies', entropies
         dot_product = sum(
-            [r*i*(1-e) for r, i, e in zip(ratings, idfs, entropies)])
-        rating = dot_product / sum(idfs)
+            [r*(1-e**10) for r, i, e in zip(ratings, idfs, entropies)])
+        rating = dot_product #/ sum(idfs)
         return rating
     else:
         return 0
@@ -84,7 +83,7 @@ def main(db_name='sentiment.db'):
     # add sentiment for each line
     for line in sys.stdin:
         sentiment += get_sentiment(line, db_name)
-    print 'sentiment: %s' % (sentiment)
+    print 'sentiment(%s): %s' % (line.strip(), sentiment)
 
 
 if __name__ == '__main__':
