@@ -103,8 +103,8 @@ def nbs_and_entropy2(rating_totals):
 def correction_factor(sentiment):
 	"""Apply a shift and multiplier to correct sentiment values."""
 
-	# shift of -0.7 is for NBSE2. Multiplier arbitrary.
-	shift = -0.7
+	# shift of -0.75 is for NBSE2. Multiplier arbitrary.
+	shift = -0.75
 	multiplier = 5
 	return (sentiment + shift) * multiplier
 
