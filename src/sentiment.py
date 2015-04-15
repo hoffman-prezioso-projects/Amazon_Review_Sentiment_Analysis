@@ -55,7 +55,7 @@ def get_sentiment(string, db_name='sentiment.db'):
         if result:
             occurrences = sum(result)
             average = sum([a*b for a, b in zip(result, range(1, 6))]) / occurrences
-            ratios = [(100 * float(a)/b)**2 for a, b in zip(result, totals)]
+            ratios = [(float(a)/b)**2 for a, b in zip(result, totals)]
             # print 'ratios', ratios
             # print 'result', result
             # print 'ratios', ratios
@@ -69,7 +69,7 @@ def get_sentiment(string, db_name='sentiment.db'):
         #print 'entropies', entropies
         dot_product = sum(
             [r*(1-e**10) for r, i, e in zip(ratings, idfs, entropies)])
-        rating = dot_product / sum(idfs)
+        rating = dot_product #/ sum(idfs)
         return rating
     else:
         return 0
