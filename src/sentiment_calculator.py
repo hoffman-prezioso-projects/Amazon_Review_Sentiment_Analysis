@@ -26,6 +26,11 @@ def entropy(values, b=0):
     return entropy
 
 
+def zero_out_minimum_total(rating_totals):
+	min_value = min(rating_totals)
+	new_totals = [total - min_value for total in rating_totals]
+	return new_totals
+
 def get_database_rows(words, cursor):
 	"""Takes list of words and returns list of database data for each word."""
 
@@ -79,12 +84,22 @@ def normalize_totals(rating_totals):
 	normalized_totals = [float(total) / max_total for total in rating_totals]
 	return normalized_totals
 
+
 def nbs_and_entropy(rating_totals):
 	normalized_totals = normalize_totals(rating_totals)
 	normalized_sum = basic_sum(normalized_totals)
 	entropy_value = entropy(rating_totals)
 	sentiment = (1 - entropy_value) * normalized_sum
 	return sentiment
+
+
+def nbs_and_entropy2(rating_totals):
+	normalized_totals = normalize_totals(rating_totals)
+	normalized_sum = basic_sum(normalized_totals)
+	entropy_value = entropy(zero_out_minimum_total(rating_totals))
+	sentiment = (1 - entropy_value) * normalized_sum
+	return sentiment
+
 
 def algorithm(rating_totals):
 	"""Placeholder for better algorithm calculation"""
@@ -100,18 +115,15 @@ def print_calculation_info(rows):
 		word = word_row[0]
 		rating_totals = word_row[1:]
 
-		basic_sum_value = basic_sum(rating_totals)
-		entropy_value = entropy(rating_totals)
-		normalized_totals = normalize_totals(rating_totals)
-		normalized_sum = basic_sum(normalized_totals)
 		print "\n"
 		print "Word: ", word
-		print "Rating Totals: ", rating_totals
-		print "Normalized Totals: ", normalized_totals
-		print "Basic Sum: ", basic_sum_value
-		print "Normalized Basic Sum: ", normalized_sum
-		print "1 - Entropy:", 1 - entropy_value 
-		print "NBS * (1 - Entropy): ", normalized_sum * (1 - entropy_value)
+		# print "Rating Totals: ", rating_totals
+		# print "Normalized Totals: ", normalize_totals(rating_totals)
+		# print "Basic Sum: ", basic_sum(rating_totals)
+		print "Normalized Basic Sum: ", basic_sum(normalize_totals(rating_totals))
+		# print "1 - Entropy:", 1 - entropy(rating_totals) 
+		print "NBS * (1 - Entropy): ", nbs_and_entropy(rating_totals)
+		print "NBS 2: ", nbs_and_entropy2(rating_totals)
 		print "\n"
 
 
@@ -122,7 +134,7 @@ def main(db_name='sentiment.db'):
 	print "Type -q to quit."
 
 	while True:
-		phrase = raw_input(":>").lower().strip()
+		phrase = raw_input(":> ").lower().strip()
 		if phrase == "-q":
 			break
 		words = phrase.split()
