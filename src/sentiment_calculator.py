@@ -100,6 +100,13 @@ def nbs_and_entropy2(rating_totals):
 	sentiment = (1 - entropy_value) * normalized_sum
 	return sentiment
 
+def correction_factor(sentiment):
+	"""Apply a shift and multiplier to correct sentiment values."""
+
+	# shift of -0.7 is for NBSE2. Multiplier arbitrary.
+	shift = -0.7
+	multiplier = 5
+	return (sentiment + shift) * multiplier
 
 def algorithm(rating_totals):
 	"""Placeholder for better algorithm calculation"""
@@ -123,7 +130,8 @@ def print_calculation_info(rows):
 		print "Normalized Basic Sum: ", basic_sum(normalize_totals(rating_totals))
 		# print "1 - Entropy:", 1 - entropy(rating_totals) 
 		print "NBS * (1 - Entropy): ", nbs_and_entropy(rating_totals)
-		print "NBS 2: ", nbs_and_entropy2(rating_totals)
+		print "NBSE 2: ", nbs_and_entropy2(rating_totals)
+		print "Corrected NBSE2: ", correction_factor(nbs_and_entropy2(rating_totals))
 		print "\n"
 
 
