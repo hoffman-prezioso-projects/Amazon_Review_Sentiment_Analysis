@@ -22,11 +22,10 @@ FROM DATA;
 '''
 
 query = '''
-select r1, r2, r3, r4, r5
-from data
-where word='%s';
+SELECT r1, r2, r3, r4, r5
+FROM data
+WHERE word='%s';
 '''
-
 
 def get_sentiment(string, db_name='sentiment.db'):
     '''Get the sentiment for a string from the db.
@@ -39,12 +38,12 @@ def get_sentiment(string, db_name='sentiment.db'):
 
     cursor = connection.execute(sum_query)
     totals = cursor.fetchone()
+    max_occurrence = max(totals)
 
-    cursor = connection.execute(sum_query)
+    cursor = connection.execute(max_query)
     max_occurrences = cursor.fetchone()[0]
 
     count = 0
-    idfs = []
     ratings = []
     entropies = []
     importances = []
@@ -53,23 +52,20 @@ def get_sentiment(string, db_name='sentiment.db'):
         cursor = connection.execute(query % word)
         result = cursor.fetchone()
         if result:
-            occurrences = sum(result)
-            average = sum([a*b for a, b in zip(result, range(1, 6))]) / occurrences
-            ratios = [(float(a)/b)**2 for a, b in zip(result, totals)]
-            # print 'ratios', ratios
-            # print 'result', result
-            # print 'ratios', ratios
-            # print 'totals', totals
-
+            ratios = [float(r) / t for r, t in zip(result, totals)]
+            exaggerated_ratios = [a**4 for a in ratios]
+            average = sum([a*b for a, b in zip(ratios, range(1, 6))]) / float(sum(ratios))
+            
+            # put rating into the range of -5 to 5
             ratings.append((average - 3) * 2.5)
-            idfs.append(math.log(max_occurrences / sum(result)) + 1)
-            entropies.append(entropy.calculate(ratios))
+
+            # get normalized shannon entropy of frequency squared
+            entropies.append(entropy.calculate(exaggerated_ratios))
 
     if len(ratings):
-        #print 'entropies', entropies
         dot_product = sum(
-            [r*(1-e**10) for r, i, e in zip(ratings, idfs, entropies)])
-        rating = dot_product #/ sum(idfs)
+            [r*(1-e**10) for r, e in zip(ratings, entropies)])
+        rating = dot_product
         return rating
     else:
         return 0
