@@ -79,10 +79,17 @@ def normalize_totals(rating_totals):
 	normalized_totals = [float(total) / max_total for total in rating_totals]
 	return normalized_totals
 
+def nbs_and_entropy(rating_totals):
+	normalized_totals = normalize_totals(rating_totals)
+	normalized_sum = basic_sum(normalized_totals)
+	entropy_value = entropy(rating_totals)
+	sentiment = (1 - entropy_value) * normalized_sum
+	return sentiment
+
 def algorithm(rating_totals):
 	"""Placeholder for better algorithm calculation"""
 
-	sentiment = basic_sum(rating_totals)
+	sentiment = nbs_and_entropy(rating_totals)
 	return sentiment
 
 
@@ -103,7 +110,8 @@ def print_calculation_info(rows):
 		print "Normalized Totals: ", normalized_totals
 		print "Basic Sum: ", basic_sum_value
 		print "Normalized Basic Sum: ", normalized_sum
-		print "Entropy:", entropy_value
+		print "1 - Entropy:", 1 - entropy_value 
+		print "NBS * (1 - Entropy): ", normalized_sum * (1 - entropy_value)
 		print "\n"
 
 
@@ -111,9 +119,9 @@ def main(db_name='sentiment.db'):
 	conn = sqlite3.connect(db_name)
 	conn.text_factory = str
 	cursor = conn.cursor()
+	print "Type -q to quit."
 
 	while True:
-		print "Type -q to quit."
 		phrase = raw_input(":>").lower().strip()
 		if phrase == "-q":
 			break
