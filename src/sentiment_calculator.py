@@ -27,136 +27,141 @@ def entropy(values, b=0):
 
 
 def zero_out_minimum_total(rating_totals):
-	min_value = min(rating_totals)
-	new_totals = [total - min_value for total in rating_totals]
-	return new_totals
+    min_value = min(rating_totals)
+    new_totals = [total - min_value for total in rating_totals]
+    return new_totals
+
 
 def get_database_rows(words, cursor):
-	"""Takes list of words and returns list of database data for each word."""
+    """Takes list of words and returns list of database data for each word."""
 
-	rows = []
-	for word in words:
-		cursor.execute('select * from data where word=?', (word, ))
-		line = cursor.fetchone()
+    rows = []
+    for word in words:
+        cursor.execute('select * from data where word=?', (word, ))
+        line = cursor.fetchone()
 
-		if line is None:
-			continue
-		else:
-			line = list(line)
-			rows.append(line)
-	return rows
+        if line is None:
+            continue
+        else:
+            line = list(line)
+            rows.append(line)
+    return rows
 
 
 def get_total_sentiment(rows):
-	"""
-	Takes list of database rows and returns the sentiment of the phrase.
-	Database row is of form [word, r1, r2, r3, r4, r4].
-	r1 corresponds to the total ratings of 1 star reviews.
-	r2 corresponds to 2 star reviews.
-	etc.
-	"""
+    """
+    Takes list of database rows and returns the sentiment of the phrase.
+    Database row is of form [word, r1, r2, r3, r4, r4].
+    r1 corresponds to the total ratings of 1 star reviews.
+    r2 corresponds to 2 star reviews.
+    etc.
+    """
 
-	scores = []
-	phrase_sentiment = 0
+    scores = []
+    phrase_sentiment = 0
 
-	for word_row in rows:
-		word = word_row[0]
-		rating_totals = word_row[1:]
+    for word_row in rows:
+        word = word_row[0]
+        rating_totals = word_row[1:]
 
-		word_sentiment = algorithm(rating_totals)
-		phrase_sentiment += word_sentiment
+        word_sentiment = algorithm(rating_totals)
+        phrase_sentiment += word_sentiment
 
-	return phrase_sentiment
+    return phrase_sentiment
 
 
 def basic_sum(rating_totals):
-	"""Multiplies each rating total by (rating - 3) and sums"""
+    """Multiplies each rating total by (rating - 3) and sums"""
 
-	sentiment = 0
-	for i, multiplier in enumerate(range(-2, 3)):
-		sentiment += rating_totals[i] * multiplier
+    sentiment = 0
+    for i, multiplier in enumerate(range(-2, 3)):
+        sentiment += rating_totals[i] * multiplier
 
-	return sentiment
+    return sentiment
 
 
 def normalize_totals(rating_totals):
-	max_total = max(rating_totals)
-	normalized_totals = [float(total) / max_total for total in rating_totals]
-	return normalized_totals
+    max_total = max(rating_totals)
+    normalized_totals = [float(total) / max_total for total in rating_totals]
+    return normalized_totals
 
 
 def nbs_and_entropy(rating_totals):
-	normalized_totals = normalize_totals(rating_totals)
-	normalized_sum = basic_sum(normalized_totals)
-	entropy_value = entropy(rating_totals)
-	sentiment = (1 - entropy_value) * normalized_sum
-	return sentiment
+    normalized_totals = normalize_totals(rating_totals)
+    normalized_sum = basic_sum(normalized_totals)
+    entropy_value = entropy(rating_totals)
+    sentiment = (1 - entropy_value) * normalized_sum
+    return sentiment
 
 
 def nbs_and_entropy2(rating_totals):
-	normalized_totals = normalize_totals(rating_totals)
-	normalized_sum = basic_sum(normalized_totals)
-	entropy_value = entropy(zero_out_minimum_total(rating_totals))
-	sentiment = (1 - entropy_value) * normalized_sum
-	return sentiment
+    normalized_totals = normalize_totals(rating_totals)
+    normalized_sum = basic_sum(normalized_totals)
+    entropy_value = entropy(zero_out_minimum_total(rating_totals))
+    sentiment = (1 - entropy_value) * normalized_sum
+    return sentiment
+
 
 def correction_factor(sentiment):
-	"""Apply a shift and multiplier to correct sentiment values."""
+    """Apply a shift and multiplier to correct sentiment values."""
 
-	# shift of -0.75 is for NBSE2. Multiplier arbitrary.
-	shift = -0.75
-	multiplier = 5
-	return (sentiment + shift) * multiplier
+    # shift of -0.75 is for NBSE2. Multiplier arbitrary.
+    shift = -0.75
+    multiplier = 5
+    return (sentiment + shift) * multiplier
+
 
 def algorithm(rating_totals):
-	"""Placeholder for better algorithm calculation"""
+    """Placeholder for better algorithm calculation"""
 
-	sentiment = nbs_and_entropy(rating_totals)
-	return sentiment
+    sentiment = nbs_and_entropy(rating_totals)
+    return sentiment
 
 
 def print_calculation_info(rows):
-	"""Displays information and values about each word"""
+    """Displays information and values about each word"""
 
-	for word_row in rows:
-		word = word_row[0]
-		rating_totals = word_row[1:]
+    for word_row in rows:
+        word = word_row[0]
+        rating_totals = word_row[1:]
 
-		print "\n"
-		print "Word: ", word
-		# print "Rating Totals: ", rating_totals
-		# print "Normalized Totals: ", normalize_totals(rating_totals)
-		# print "Basic Sum: ", basic_sum(rating_totals)
-		print "Normalized Basic Sum: ", basic_sum(normalize_totals(rating_totals))
-		# print "1 - Entropy:", 1 - entropy(rating_totals) 
-		print "NBS * (1 - Entropy): ", nbs_and_entropy(rating_totals)
-		print "NBSE 2: ", nbs_and_entropy2(rating_totals)
-		print "Corrected NBSE2: ", correction_factor(nbs_and_entropy2(rating_totals))
-		print "\n"
+        print "\n"
+        print "Word: ", word
+        # print "Rating Totals: ", rating_totals
+        # print "Normalized Totals: ", normalize_totals(rating_totals)
+        # print "Basic Sum: ", basic_sum(rating_totals)
+        print "Normalized Basic Sum: ", \
+            basic_sum(normalize_totals(rating_totals))
+        # print "1 - Entropy:", 1 - entropy(rating_totals)
+        print "NBS * (1 - Entropy): ", nbs_and_entropy(rating_totals)
+        print "NBSE 2: ", nbs_and_entropy2(rating_totals)
+        print "Corrected NBSE2: ", \
+            correction_factor(nbs_and_entropy2(rating_totals))
+        print "\n"
 
 
 def main(db_name='sentiment.db'):
-	conn = sqlite3.connect(db_name)
-	conn.text_factory = str
-	cursor = conn.cursor()
-	print "Type -q to quit."
+    conn = sqlite3.connect(db_name)
+    conn.text_factory = str
+    cursor = conn.cursor()
+    print "Type -q to quit."
 
-	while True:
-		phrase = raw_input(":> ").lower().strip()
-		if phrase == "-q":
-			break
-		words = phrase.split()
+    while True:
+        phrase = raw_input(":> ").lower().strip()
+        if phrase == "-q":
+            break
+        words = phrase.split()
 
-		rows = get_database_rows(words, cursor)
-		sentiment = get_total_sentiment(rows)
+        rows = get_database_rows(words, cursor)
+        sentiment = get_total_sentiment(rows)
 
-		print_calculation_info(rows)  # Comment out to disable individual word information
+        print_calculation_info(rows)  # Print individual word information
 
-		print "Phrase: ", phrase
-		print "Total Sentiment: ", sentiment
+        print "Phrase: ", phrase
+        print "Total Sentiment: ", sentiment
 
-	conn.close()
-	print "Goodbye"
+    conn.close()
+    print "Goodbye"
 
 
 if __name__ == '__main__':
