@@ -28,7 +28,7 @@ where word='%s';
 '''
 
 
-def get_sentiment(string, db_name='sentiment1.db'):
+def get_sentiment(string, db_name='sentiment.db'):
     '''Get the sentiment for a string from the db.
     The string may have multiple words'''
 
@@ -54,8 +54,7 @@ def get_sentiment(string, db_name='sentiment1.db'):
         result = cursor.fetchone()
         if result:
             occurrences = sum(result)
-            average = sum([a*b for a, b in zip(result, range(1, 6))])
-                 / occurrences
+            average = sum([a*b for a, b in zip(result, range(1, 6))]) / occurrences
             ratios = [(100 * float(a)/b)**2 for a, b in zip(result, totals)]
             # print 'ratios', ratios
             # print 'result', result
@@ -76,7 +75,7 @@ def get_sentiment(string, db_name='sentiment1.db'):
         return 0
 
 
-def main(db_name='sentiment1.db'):
+def main(db_name='sentiment.db'):
     '''Compute sentiment based on whatever was piped in'''
 
     sentiment = 0
