@@ -3,7 +3,6 @@
 import math
 import sqlite3
 import sys
-
 import entropy
 
 sum_query = '''
