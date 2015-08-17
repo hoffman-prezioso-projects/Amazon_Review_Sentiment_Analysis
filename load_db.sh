@@ -12,7 +12,7 @@ TABLE="data"
 sqlite3 $DATABASE <<EOS
 
 DROP TABLE IF EXISTS $TABLE;
-CREATE TABLE $TABLE (word TEXT, sentiment REAL);
+CREATE TABLE $TABLE (word TEXT, r1 INTEGER, r2 INTEGER, r3 INTEGER, r4 INTEGER, r5 INTEGER);
 
 .mode csv
 .separator "\t"

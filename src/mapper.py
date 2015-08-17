@@ -4,7 +4,7 @@ import re
 import sys
 from spell_checker import SpellChecker
 
-nonword_pattern = re.compile(r'[^a-zA-Z]')
+nonword_pattern = re.compile(r"[^a-zA-Z']")
 sc = SpellChecker()
 
 
@@ -20,13 +20,7 @@ def get_word_freq(text):
             else:
                 word_freq[word] = 1
 
-    max_term_freq = 0
-
-    for word in word_freq:
-        if word_freq[word] > max_term_freq:
-            max_term_freq = word_freq[word]
-
-    return word_freq, max_term_freq
+    return word_freq
 
 review = {}
 
@@ -43,11 +37,10 @@ for line in sys.stdin:
     if key == 'review/text':
         words = re.sub(nonword_pattern, ' ', value)
 
-        word_freq, max_term_freq = get_word_freq(words)
+        word_freq = get_word_freq(words)
 
         for word in word_freq:
-            # emit word, rating, ntf, and frequency
-            print '%s\t%s\t%s\t%s' % (word, review['review/score'],
-                                      word_freq[word] / float(max_term_freq),
-                                      word_freq[word])
+            # emit word, rating, and frequency
+            print '%s\t%s\t%s' % (word, review['review/score'],
+                                  word_freq[word])
         review = {}

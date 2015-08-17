@@ -1,9 +1,14 @@
+#!/usr/bin/env python
+import os
+
+
 class SpellChecker:
     dictionary = {}
 
     def __init__(self):
         self.dictionary = {}
-        word_list = open("./res/en_dictionary.txt")
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        word_list = open(current_directory + "/en_dictionary.txt", 'r')
 
         for word in word_list:
             self.dictionary[word.strip()] = True
