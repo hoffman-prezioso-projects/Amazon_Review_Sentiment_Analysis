@@ -20,4 +20,4 @@ SOURCE_DIR=$1
 DOCUMENT_COUNT="$(ls $SOURCE_DIR/$SOURCE_PATTERN -1 | wc -l)"
 
 # run it
-cat $SOURCE_DIR/$SOURCE_PATTERN | ./src/mapper.py | sort -k1,1 | ./src/reducer.py $DOCUMENT_COUNT
+cat $SOURCE_DIR/$SOURCE_PATTERN | ../src/mapreduce/mapper.py | sort -k1,1 | ../src/mapreduce/reducer.py $DOCUMENT_COUNT

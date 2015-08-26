@@ -27,8 +27,8 @@ date
 echo "Running mapReduce..."
 hadoop jar /usr/lib/hadoop-0.20-mapreduce/contrib/streaming/hadoop-streaming.jar \
 -files src \
--mapper src/mapper.py \
--reducer src/reducer.py \
+-mapper ../src/mapreduce/mapper.py \
+-reducer ../src/mapreduce/reducer.py \
 -input crawl/reviews/* \
 -output crawl/$OUTPUT_DIR
 echo "mapReduce complete!"
