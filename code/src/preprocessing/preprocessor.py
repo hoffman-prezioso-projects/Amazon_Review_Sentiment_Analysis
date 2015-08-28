@@ -5,13 +5,12 @@ import sys
 
 print "This program splits Amazon reviews file into individual .review files."
 print "These are stored in a directory created in your current directory."
-# master_file_path = raw_input("Enter master file path: ")
 start_time = time.time()
 print sys.argv[1]
 try:
     master_file = open(sys.argv[1])
 except:
-    print "Invalid file:", master_file_path
+    print "Invalid file provided."
     exit(0)
 
 
