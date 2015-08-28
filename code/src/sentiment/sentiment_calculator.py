@@ -12,7 +12,7 @@ def get_database_rows(words, cursor):
         cursor.execute('select * from data where word=?', (word, ))
         line = cursor.fetchone()
 
-        if line is None:
+        if not line:
             continue
         else:
             line = list(line)
